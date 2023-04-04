@@ -1,7 +1,7 @@
 import numpy as np
 import random
+import queue
 from PIL import Image
-
 
 def cardinals(pos):
     x, y = pos
@@ -41,6 +41,10 @@ def generate_maze(xsize, ysize):
         # Choose a random walls
         loc = random.choice(tuple(walls))
         walls.remove(loc)
+        # check if this is the last wall
+        # if so set to 3 so we know where the end of the maze is
+        if not len(walls):
+            end = loc
         maze[loc] = 0
         card = cardinals(loc)
 
@@ -64,10 +68,26 @@ def generate_maze(xsize, ysize):
                 if pos[1] >= 0 and pos[1] < ysize-1:
                     if maze[pos] == 1:
                         walls.add(pos)
-        # print(walls)
-        # print(loc)
-        # print(maze)
+    # label start and end of maze so that
+    # we know where to start and end when we solve
+    maze[start] = 2
+    maze[end] = 3
     return maze
+
+
+def solve_maze(maze):
+    '''
+       Takes a np array and solves a maze
+    '''
+    # algo:
+    # 1) find the start of the maze (2) and end (3)
+    # 2) append start to queue and set its distance to -1
+    # 3) start loop until queue is empty
+    # 4) when an element is popped add all its neighbors to the qeueue
+    #    and decrease the distance by 1
+    # 5) repeat untill queue empty
+    # 6) start at end and go to next highest pixel to find shortest path
+    #    highlighting the original maze at (x,y) red untill start is found
 
 
 if __name__ == '__main__':
@@ -75,10 +95,14 @@ if __name__ == '__main__':
     ysize = 100
     maze = generate_maze(xsize, ysize)
     print(maze)
-    img = Image.new('1', (xsize, ysize), color='black')
+    img = Image.new('RGB', (xsize, ysize), color='black')
     for x in range(xsize):
         for y in range(ysize):
             if maze[x][y] == 0:
-                img.putpixel((x, y), 1)
+                img.putpixel((x, y), (255, 255, 255))
+            elif maze[x][y] == 2:
+                img.putpixel((x, y), (255, 0, 0))
+            elif maze[x][y] == 3:
+                img.putpixel((x, y), (0, 255, 0))
     # save the image as a bitmap file
-    img.save('bitmap.bmp')
+    img.save('mazes/bitmap.bmp')
