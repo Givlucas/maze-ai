@@ -72,10 +72,10 @@ def generate_maze(xsize, ysize):
     # we know where to start and end when we solve
     maze[start] = 2
     maze[end] = 3
-    return maze
+    return (maze, start, end)
 
 
-def solve_maze(maze):
+def solve_maze(maze, start, end):
     '''
        Takes a np array and solves a maze
     '''
@@ -93,7 +93,7 @@ def solve_maze(maze):
 if __name__ == '__main__':
     xsize = 100
     ysize = 100
-    maze = generate_maze(xsize, ysize)
+    maze, start, end = generate_maze(xsize, ysize)
     print(maze)
     img = Image.new('RGB', (xsize, ysize), color='black')
     for x in range(xsize):
