@@ -79,15 +79,32 @@ def solve_maze(maze, start, end):
     '''
        Takes a np array and solves a maze
     '''
+    # TODO: need to add queue items to tree
+
     # algo:
     # 1) find the start of the maze (2) and end (3)
-    # 2) append start to queue and set its distance to -1
+    # 2) append start to queue and set its distance to 0 
+    #    and insert to tree as root
     # 3) start loop until queue is empty
     # 4) when an element is popped add all its neighbors to the qeueue
-    #    and decrease the distance by 1
+    #    and then add its neihbors too the tree with the parent being the 
+    #    element popped
     # 5) repeat untill queue empty
-    # 6) start at end and go to next highest pixel to find shortest path
+    # 6) start at end and go to next lowest pixel to find shortest path
     #    highlighting the original maze at (x,y) red untill start is found
+    q = queue()
+    q.put(start)
+    xsize, ysize = maze.shape()
+
+    while len(q) < 0:
+        loc = q.get()
+        card = cardinals(loc)
+
+        for pos in card:
+            if pos[0] >= 0 and pos[0] < xsize - 1:
+                if pos[1] >= 0 and pos[1] >= ysize - 1:
+                    if maze[pos] != 1:
+                        q.put(pos)
 
 
 if __name__ == '__main__':
